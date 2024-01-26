@@ -9,6 +9,30 @@ namespace ConsoleAppCodeWars
 {
     public class SnailOutput
     {
+        private class Point
+        {
+            public int X;
+            public int Y;
+
+            public Point()
+            {
+                X = 0;
+                Y = 0;
+            }
+            public Point(int x, int y)
+            {
+                X = x;
+                Y = y;
+            }
+            public Point(Point point)
+            {
+                X = point.X;
+                Y = point.Y;
+            }
+
+            public bool Equals(Point point) => (this.X == point.X) && (this.Y == point.Y) ? true : false;
+        }
+
         private enum Vector
         {
             Up,
@@ -47,7 +71,7 @@ namespace ConsoleAppCodeWars
             return ints;
         }
         private bool IsReadable(Point point)
-        => (points.FirstOrDefault(x => x.X == point.X && x.Y == point.Y) == null) &&
+        => (points.FirstOrDefault(x => x.Equals(point)) == null) &&
         (point.X < _size) && (point.Y < _size) && (point.X >= 0) && (point.Y >= 0) ?
         true : false;
         private bool TryAddPoints(Point point)
@@ -87,13 +111,11 @@ namespace ConsoleAppCodeWars
         {
             if (points.Count != 0)
                 points.Remove(points.Last());
-            Point activepoint = pointStart;
+
             int i = 0;
-            while (TryAddPoints(new Point(activepoint)))
-            {
-                Operarion(ref activepoint, vector);
-                i++;
-            }
+            for (; TryAddPoints(new Point(pointStart)); i++)
+                Operarion(ref pointStart, vector);
+
             if (i == 1)
                 return Vector.End;
             else
@@ -106,24 +128,22 @@ namespace ConsoleAppCodeWars
             else
                 return points.Last();
         }
-        public void Select()
+        private void Select()
         {
-            string text = String.Empty; 
-            points.ForEach(p => text+= $"{ints[p.X][p.Y]}, ");
-            text = text.Remove(text.Length-2, 2);
-            Console.WriteLine(text);
+            string text = String.Empty;
+            points.ForEach(p => text += $"{ints[p.X][p.Y]}, ");
+            Console.WriteLine(text.Remove(text.Length - 2, 2));
         }
         public void Reading()
         {
             Point startpoint = null;
             Vector vector = Vector.Right;
-            while (true)
+            while (vector != Vector.End)
             {
                 startpoint = SetStartPoint(startpoint);
                 vector = Read(startpoint, vector);
-                if (vector == Vector.End)
-                    break;
             }
+            Select();
         }
     }
 }

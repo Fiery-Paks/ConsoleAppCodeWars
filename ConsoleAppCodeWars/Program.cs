@@ -10,9 +10,8 @@ namespace ConsoleAppCodeWars
     {
         static void Main(string[] args)
         {
-            SnailOutput snailOutput = new SnailOutput(8);
+            SnailOutput snailOutput = new SnailOutput(4);
             snailOutput.Reading();
-            snailOutput.Select();
             Console.ReadKey();
         }
 
