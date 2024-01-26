@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ConsoleAppCodeWars
 {
@@ -14,11 +11,6 @@ namespace ConsoleAppCodeWars
             public int X;
             public int Y;
 
-            public Point()
-            {
-                X = 0;
-                Y = 0;
-            }
             public Point(int x, int y)
             {
                 X = x;
@@ -45,13 +37,19 @@ namespace ConsoleAppCodeWars
         private List<Point> points;
         private int[][] ints;
         private int _size;
-        private delegate Vector ReadVector(Point pointStart);
 
         public SnailOutput(int size)
         {
             _size = size;
             points = new List<Point>();
             ints = InitArray(size);
+        }
+
+        public SnailOutput(int[][] array)
+        {
+            _size = array.Count();
+            points = new List<Point>();
+            ints = array;
         }
 
         private int[][] InitArray(int size)
@@ -128,13 +126,8 @@ namespace ConsoleAppCodeWars
             else
                 return points.Last();
         }
-        private void Select()
-        {
-            string text = String.Empty;
-            points.ForEach(p => text += $"{ints[p.X][p.Y]}, ");
-            Console.WriteLine(text.Remove(text.Length - 2, 2));
-        }
-        public void Reading()
+
+        private void Reading()
         {
             Point startpoint = null;
             Vector vector = Vector.Right;
@@ -143,7 +136,22 @@ namespace ConsoleAppCodeWars
                 startpoint = SetStartPoint(startpoint);
                 vector = Read(startpoint, vector);
             }
-            Select();
+        }
+        private int[] ConvetToMas(List<Point> points)
+        {
+            int[] intmas = new int[points.Count];
+            for (int i = 0; i < points.Count; i++)
+                intmas[i] = ints[points[i].X][points[i].Y];
+            
+            return intmas;
+        }
+        public int[] Select()
+        {
+            Reading();
+            string text = String.Empty;
+            points.ForEach(p => text += $"{ints[p.X][p.Y]}, ");
+            Console.WriteLine(text.Remove(text.Length - 2, 2));
+            return ConvetToMas(points);
         }
     }
 }
